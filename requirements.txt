@@ -1,0 +1,9 @@
+flask>=3.0.0
+numpy
+pandas
+matplotlib
+scikit-learn
+scipy
+seaborn
+requests
+openai

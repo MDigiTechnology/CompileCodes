@@ -1,0 +1,152 @@
+{% extends "base.html" %}
+{% from "_ads.html" import ad_slot with context %}
+
+{% block title %}{{ seo_title | default(site.name ~ ' — ' ~ site.tagline) }}{% endblock %}
+{% block meta_description %}{{ seo_description | default(site.description) }}{% endblock %}
+{% block meta_keywords %}{{ seo_keywords | default(site.keywords) }}{% endblock %}
+{% set canonical_path = canonical_path | default('/') %}
+
+{% block body_class %}page-compiler{% endblock %}
+
+{% block head_assets %}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/theme/dracula.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.css">
+{% endblock %}
+
+{% block structured_data %}
+{{ super() }}
+{% if faq_items %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {% for item in faq_items %}
+    {
+      "@type": "Question",
+      "name": {{ item.question | tojson }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ item.answer | tojson }}
+      }
+    }{% if not loop.last %},{% endif %}
+    {% endfor %}
+  ]
+}
+</script>
+{% endif %}
+{% endblock %}
+
+{% block body %}
+  {{ ad_slot(site.adsense_slot_top, 'Advertisement') }}
+
+  <div class="app">
+    <header class="header">
+      <div class="header-left">
+        <a href="{{ url_for('index') }}" class="logo" aria-label="{{ site.name }} home">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
+            <rect width="28" height="28" rx="6" fill="#3776AB"/>
+            <path d="M8 7h12v2H8V7zm0 4h12v2H8v-2zm0 4h8v2H8v-2z" fill="white" opacity="0.9"/>
+            <path d="M6 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v18a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V5z" stroke="white" stroke-width="1.5" fill="none"/>
+          </svg>
+          <span class="logo-text">{{ site.name }}</span>
+        </a>
+        <p class="header-tagline">{{ seo_h1 | default(site.tagline) }}</p>
+      </div>
+
+      <nav class="lang-tabs" id="lang-tabs" aria-label="Select language">
+        <button class="lang-tab{% if default_lang == 'python' %} active{% endif %}" data-lang="python">
+          <span class="lang-dot python"></span> Python
+        </button>
+        <button class="lang-tab{% if default_lang == 'java' %} active{% endif %}" data-lang="java">
+          <span class="lang-dot java"></span> Java
+        </button>
+        <button class="lang-tab{% if default_lang == 'cpp' %} active{% endif %}" data-lang="cpp">
+          <span class="lang-dot cpp"></span> C++
+        </button>
+        <button class="lang-tab{% if default_lang == 'sql' %} active{% endif %}" data-lang="sql">
+          <span class="lang-dot sql"></span> SQL
+        </button>
+      </nav>
+
+      <div class="header-actions">
+        <button id="btn-clear" class="btn btn-ghost" title="Clear editor">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/><path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/></svg>
+          Clear
+        </button>
+        <button id="btn-run" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="m11.596 8.697-6.363 3.692c-.54.313-1.233-.066-1.233-.697V4.308c0-.63.692-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393z"/></svg>
+          Run
+        </button>
+      </div>
+    </header>
+
+    <main class="workspace" id="main-content">
+      <h1 class="visually-hidden">{{ seo_h1 | default(site.tagline) }}</h1>
+      <section class="panel editor-panel" aria-label="Code editor">
+        <div class="panel-header">
+          <span class="panel-title" id="file-name">main.py</span>
+          <span class="panel-meta" id="line-info">Ln 1, Col 1</span>
+        </div>
+        <div class="sql-notice hidden" id="sql-notice">
+          Temporary in-memory database — all tables and data reset when you refresh the page.
+        </div>
+        <div class="editor-wrapper">
+          <textarea id="code-editor"></textarea>
+        </div>
+      </section>
+
+      <div class="divider" id="divider" role="separator" aria-orientation="vertical"></div>
+
+      <section class="panel output-panel" aria-label="Program output">
+        <div class="panel-header">
+          <span class="panel-title">Output</span>
+          <span class="status-dot" id="status-dot" title="Ready"></span>
+        </div>
+        <div class="output-wrapper">
+          <pre id="output" class="output-content">Ready. Press <kbd>Ctrl</kbd>+<kbd>Enter</kbd> or click Run to execute.</pre>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <nav class="footer-nav" aria-label="Site links">
+        <a href="{{ url_for('python_compiler') }}">Python</a>
+        <a href="{{ url_for('java_compiler') }}">Java</a>
+        <a href="{{ url_for('cpp_compiler') }}">C++</a>
+        <a href="{{ url_for('sql_compiler') }}">SQL</a>
+        <a href="{{ url_for('about') }}">About</a>
+        <a href="{{ url_for('privacy') }}">Privacy</a>
+        <a href="{{ url_for('terms') }}">Terms</a>
+      </nav>
+      <span>Developed by <strong>{{ site.author }}</strong></span>
+      <span class="footer-hint"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> to run &middot; <kbd>Ctrl</kbd>+<kbd>Space</kbd> for suggestions</span>
+    </footer>
+  </div>
+
+  {{ ad_slot(site.adsense_slot_bottom, 'Advertisement') }}
+
+  {% if seo_intro %}
+  <section class="seo-intro" aria-labelledby="seo-intro-heading">
+    <div class="seo-intro-inner">
+      <h2 id="seo-intro-heading">{{ seo_intro.heading }}</h2>
+      {% for paragraph in seo_intro.paragraphs %}
+      <p>{{ paragraph }}</p>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/codemirror.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/python/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/clike/clike.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/mode/sql/sql.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/closebrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/edit/matchbrackets.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.16/addon/hint/show-hint.min.js"></script>
+  <script>
+    window.DEFAULT_COMPILER_LANG = {{ default_lang | default('python') | tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+{% endblock %}

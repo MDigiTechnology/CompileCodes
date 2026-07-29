@@ -1,0 +1,13 @@
+{% macro ad_slot(slot_id, label) %}
+{% if site.adsense_client and slot_id %}
+<aside class="ad-slot" aria-label="{{ label }}">
+  <ins class="adsbygoogle"
+       style="display:block"
+       data-ad-client="{{ site.adsense_client }}"
+       data-ad-slot="{{ slot_id }}"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</aside>
+{% endif %}
+{% endmacro %}

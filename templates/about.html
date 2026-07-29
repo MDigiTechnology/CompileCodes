@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% set canonical_path = '/about' %}
+
+{% block title %}About — {{ site.name }}{% endblock %}
+{% block meta_description %}Learn about {{ site.name }}: a free online IDE to run Python, Java, C++, and SQL in your browser with no signup.{% endblock %}
+
+{% block structured_data %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": {{ ("About " ~ site.name) | tojson }},
+  "url": {{ (site.url ~ "/about") | tojson }},
+  "description": {{ site.description | tojson }}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Is {{ site.name }} free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You can write, compile, and run code in your browser at no cost and without creating an account."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which languages are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Python, Java, C++, and SQL. Python includes popular data science libraries such as numpy and pandas when installed on the server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my code stored on the server?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Code runs in temporary sandboxes. SQL uses an in-memory database that clears when you refresh. We do not require login and do not keep your source code after execution."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+{% block body %}
+<div class="site-shell">
+  <header class="site-header">
+    <a href="{{ url_for('index') }}" class="logo">
+      <span class="logo-text">{{ site.name }}</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="{{ url_for('index') }}">Compiler</a>
+      <a href="{{ url_for('python_compiler') }}">Python</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a href="{{ url_for('privacy') }}">Privacy</a>
+    </nav>
+  </header>
+
+  <main class="content-main">
+    <h1>About {{ site.name }}</h1>
+    <p class="lead">{{ site.description }}</p>
+
+    <h2>What you can do here</h2>
+    <ul>
+      <li>Run <a href="{{ url_for('python_compiler') }}">Python online</a> — great for scripts, data analysis, and learning.</li>
+      <li>Compile and run <a href="{{ url_for('java_compiler') }}">Java</a> with a standard <code>public class</code> entry point.</li>
+      <li>Build and execute <a href="{{ url_for('cpp_compiler') }}">C++</a> with g++ (C++17).</li>
+      <li>Practice <a href="{{ url_for('sql_compiler') }}">SQL</a> on a temporary in-memory database.</li>
+    </ul>
+
+    <h2>Why use an online compiler?</h2>
+    <p>
+      Online IDEs help students, interview candidates, and developers test snippets quickly without installing toolchains.
+      Search engines rank useful tools higher when pages load fast, work on mobile, and explain clearly what the tool does —
+      that is why we publish dedicated pages for each language and maintain privacy and terms pages for transparency.
+    </p>
+
+    <h2>Frequently asked questions</h2>
+    <dl class="faq-list">
+      <dt>Is it free?</dt>
+      <dd>Yes — no account required.</dd>
+      <dt>Can I use this for production workloads?</dt>
+      <dd>No. This site is for learning and quick experiments. Execution time and resources are limited.</dd>
+      <dt>Who built this?</dt>
+      <dd>{{ site.name }} was created by {{ site.author }} as a lightweight coding playground.</dd>
+    </dl>
+  </main>
+
+  <footer class="site-footer">
+    <a href="{{ url_for('terms') }}">Terms</a> &middot; <a href="{{ url_for('privacy') }}">Privacy</a>
+  </footer>
+</div>
+{% endblock %}

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{{ site.name }} — {{ site.tagline }}{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}{{ site.description }}{% endblock %}">
+  <meta name="keywords" content="{% block meta_keywords %}{{ site.keywords }}{% endblock %}">
+  <meta name="author" content="{{ site.author }}">
+  <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
+  <link rel="canonical" href="{% block canonical %}{{ site.url }}{{ canonical_path | default('/') }}{% endblock %}">
+
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:site_name" content="{{ site.name }}">
+  <meta property="og:title" content="{{ self.title() | striptags | trim }}">
+  <meta property="og:description" content="{{ self.meta_description() | striptags | trim }}">
+  <meta property="og:url" content="{{ site.url }}{{ canonical_path | default('/') }}">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:image" content="{{ site.url }}/static/img/og-image.png">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ self.title() | striptags | trim }}">
+  <meta name="twitter:description" content="{{ self.meta_description() | striptags | trim }}">
+  <meta name="twitter:image" content="{{ site.url }}/static/img/og-image.png">
+
+  <link rel="icon" href="{{ url_for('static', filename='img/favicon.svg') }}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{{ url_for('static', filename='img/icon-192.png') }}">
+  <link rel="manifest" href="{{ url_for('webmanifest') }}">
+  <meta name="theme-color" content="#3776ab">
+
+  {% if site.google_site_verification %}
+  <meta name="google-site-verification" content="{{ site.google_site_verification }}">
+  {% endif %}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  {% block head_assets %}{% endblock %}
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/seo.css') }}">
+
+  {% block structured_data %}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": {{ site.name | tojson }},
+    "url": {{ site.url | tojson }},
+    "description": {{ site.description | tojson }},
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": {{ site.author | tojson }}
+    }
+  }
+  </script>
+  {% endblock %}
+
+  {% if site.ga_id %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.ga_id }}"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', '{{ site.ga_id }}');
+  </script>
+  {% endif %}
+
+  {% if site.adsense_client %}
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ site.adsense_client }}"
+          crossorigin="anonymous"></script>
+  {% endif %}
+
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="{% block body_class %}page-content{% endblock %}">
+  {% block body %}{% endblock %}
+</body>
+</html>

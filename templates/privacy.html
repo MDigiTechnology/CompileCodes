@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% set canonical_path = '/privacy' %}
+
+{% block title %}Privacy Policy — {{ site.name }}{% endblock %}
+{% block meta_description %}Privacy policy for {{ site.name }}: how we handle code execution, cookies, analytics, and advertising.{% endblock %}
+
+{% block body %}
+<div class="site-shell">
+  <header class="site-header">
+    <a href="{{ url_for('index') }}" class="logo">
+      <span class="logo-text">{{ site.name }}</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="{{ url_for('index') }}">Compiler</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a href="{{ url_for('privacy') }}">Privacy</a>
+      <a href="{{ url_for('terms') }}">Terms</a>
+    </nav>
+  </header>
+
+  <main class="content-main">
+    <h1>Privacy Policy</h1>
+    <p class="lead">Last updated: {{ site.privacy_updated }}</p>
+
+    <h2>Overview</h2>
+    <p>
+      {{ site.name }} ("we", "us") operates a free online code compiler at {{ site.url }}.
+      This policy explains what information is processed when you use the service.
+    </p>
+
+    <h2>Code you submit</h2>
+    <p>
+      When you click Run, your source code is sent to our server only to compile or execute it and return output.
+      We do not require registration. Temporary files created during execution are deleted after each run.
+      SQL sessions use an in-memory database that is discarded when you refresh or after a period of inactivity.
+    </p>
+
+    <h2>Log data</h2>
+    <p>
+      Like most websites, our hosting provider may record standard server logs (IP address, browser type, timestamps, requested URLs)
+      for security and reliability. We do not sell personal information.
+    </p>
+
+    <h2>Cookies and analytics</h2>
+    <p>
+      If Google Analytics is enabled, Google may set cookies to measure traffic and usage in aggregate.
+      You can control cookies through your browser settings.
+    </p>
+
+    <h2>Advertising</h2>
+    <p>
+      If we display ads (for example Google AdSense), Google and its partners may use cookies to serve ads based on your visits
+      to this and other sites. You can opt out of personalized advertising via
+      <a href="https://www.google.com/settings/ads" rel="noopener noreferrer">Google Ads Settings</a>.
+      Our <a href="{{ url_for('ads_txt') }}">ads.txt</a> file lists authorized ad sellers when ads are active.
+    </p>
+
+    <h2>Contact</h2>
+    <p>
+      Questions about this policy? Contact the site owner: {{ site.author }} (via the contact method listed on your deployed site).
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    &copy; {{ site.name }}
+  </footer>
+</div>
+{% endblock %}

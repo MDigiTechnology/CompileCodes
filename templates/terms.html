@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% set canonical_path = '/terms' %}
+
+{% block title %}Terms of Use — {{ site.name }}{% endblock %}
+{% block meta_description %}Terms of use for {{ site.name }} online compiler: acceptable use, disclaimers, and limitations.{% endblock %}
+
+{% block body %}
+<div class="site-shell">
+  <header class="site-header">
+    <a href="{{ url_for('index') }}" class="logo">
+      <span class="logo-text">{{ site.name }}</span>
+    </a>
+    <nav aria-label="Primary">
+      <a href="{{ url_for('index') }}">Compiler</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a href="{{ url_for('privacy') }}">Privacy</a>
+      <a href="{{ url_for('terms') }}">Terms</a>
+    </nav>
+  </header>
+
+  <main class="content-main">
+    <h1>Terms of Use</h1>
+    <p class="lead">Last updated: {{ site.privacy_updated }}</p>
+
+    <h2>Acceptance</h2>
+    <p>
+      By using {{ site.name }}, you agree to these terms. If you do not agree, please do not use the service.
+    </p>
+
+    <h2>Service description</h2>
+    <p>
+      We provide an online environment to write and run code for educational and experimental purposes.
+      The service is provided "as is" without warranties of any kind.
+    </p>
+
+    <h2>Acceptable use</h2>
+    <p>You agree not to:</p>
+    <ul>
+      <li>Run code intended to attack, scan, or disrupt our systems or third parties.</li>
+      <li>Upload malware, mine cryptocurrency, or attempt to bypass resource limits.</li>
+      <li>Violate applicable laws or intellectual property rights.</li>
+      <li>Automate heavy traffic that degrades the service for others.</li>
+    </ul>
+
+    <h2>Limitation of liability</h2>
+    <p>
+      We are not liable for any loss arising from use of the compiler, incorrect program output, or service interruptions.
+      You are responsible for reviewing code you execute.
+    </p>
+
+    <h2>Changes</h2>
+    <p>
+      We may update these terms or modify features at any time. Continued use after changes constitutes acceptance.
+    </p>
+  </main>
+
+  <footer class="site-footer">
+    <a href="{{ url_for('privacy') }}">Privacy Policy</a>
+  </footer>
+</div>
+{% endblock %}
